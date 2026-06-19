@@ -160,7 +160,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .stat-card.amber-c .stat-num{color:var(--amber);}
 
 /* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
+.modal {
+  max-height: 85vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.modal-overlay{position:fixed;overflow-y: auto;padding: 20px 0;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
 .modal-overlay.open{opacity:1;pointer-events:all;}
 .modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:28px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;transform:translateY(20px);transition:transform .25s;box-shadow:var(--shadow);}
 .modal-overlay.open .modal{transform:translateY(0);}
@@ -168,6 +174,13 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .modal-title{font-family:var(--font-serif);font-size:20px;}
 .modal-close{background:var(--bg3);border:1px solid var(--border);color:var(--text2);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;}
 .modal-close:hover{color:var(--text);}
+
+@media (max-width: 768px) {
+  .modal {
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+}
 
 /* FORMS */
 .form-group{margin-bottom:18px;}
@@ -627,6 +640,143 @@ input[type="color"]{width:32px;height:32px;border-radius:6px;border:1px solid va
   </div>
 </div>
 
+<!-- JOURNAL MODAL -->
+<div class="modal-overlay" id="journalModal">
+  <div class="modal">
+
+    <div class="modal-header">
+      <h2
+        class="modal-title"
+        id="journalModalTitle"
+      >
+        New Journal Entry
+      </h2>
+
+      <button
+        class="modal-close"
+        onclick="closeModal('journalModal')"
+      >
+        ×
+      </button>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Title</label>
+
+      <input
+        class="form-input"
+        id="journalTitle"
+        placeholder="Entry title..."
+        maxlength="100"
+      >
+    </div>
+
+    <div class="form-row">
+
+      <div class="form-group">
+        <label class="form-label">Mood</label>
+
+        <select
+          class="form-select"
+          id="journalMood"
+        >
+          <option value="😊">😊 Happy</option>
+          <option value="😌">😌 Calm</option>
+          <option value="🤩">🤩 Excited</option>
+          <option value="💪">💪 Motivated</option>
+          <option value="🤔">🤔 Reflective</option>
+          <option value="😔">😔 Sad</option>
+          <option value="😴">😴 Tired</option>
+          <option value="😤">😤 Frustrated</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Date</label>
+
+        <input
+          class="form-input"
+          id="journalDate"
+          type="date"
+        >
+      </div>
+
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">
+        Reflection Prompt
+      </label>
+
+      <select
+        class="form-select"
+        id="journalPrompt"
+      >
+        <option value="">
+          Select a prompt (optional)
+        </option>
+
+        <option>
+          What am I grateful for today?
+        </option>
+
+        <option>
+          What challenged me today?
+        </option>
+
+        <option>
+          What did I learn today?
+        </option>
+
+        <option>
+          What am I proud of today?
+        </option>
+
+        <option>
+          What would make tomorrow better?
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">
+        Journal Entry
+      </label>
+
+      <textarea
+        class="form-textarea"
+        id="journalContent"
+        placeholder="Write freely..."
+        style="min-height:220px;"
+      ></textarea>
+    </div>
+
+    <div
+      style="
+        display:flex;
+        gap:10px;
+        justify-content:flex-end;
+      "
+    >
+      <button
+        class="btn btn-ghost"
+        onclick="closeModal('journalModal')"
+      >
+        Cancel
+      </button>
+
+      <button
+        class="btn btn-primary"
+        id="saveJournalBtn"
+        onclick="saveJournal()"
+      >
+        Save Entry
+      </button>
+    </div>
+
+  </div>
+</div>
+
 <!-- APP -->
 <div class="app">
   <div class="sidebar" id="sidebar">
@@ -639,6 +789,7 @@ input[type="color"]{width:32px;height:32px;border-radius:6px;border:1px solid va
       <div class="nav-item" onclick="showSection('calendar');closeSidebar();" data-sec="calendar"><span class="icon">🗓️</span> Calendar</div>
       <div class="nav-item" onclick="showSection('habits');closeSidebar();" data-sec="habits"><span class="icon">🔁</span> Habits</div>
       <div class="nav-item" onclick="showSection('goals');closeSidebar();" data-sec="goals"><span class="icon">🎯</span> Goals</div>
+      <div class="nav-item" onclick="showSection('journal');closeSidebar();" data-sec="journal"><span class="icon">📖</span> Journal</div>
       <div class="nav-item" onclick="showSection('analytics');closeSidebar();" data-sec="analytics"><span class="icon">📊</span> Analytics</div>
       <div class="nav-item" onclick="showSection('heatmap');closeSidebar();" data-sec="heatmap"><span class="icon">🗺️</span> Heatmap</div>
       <div class="nav-item" onclick="showSection('weekly');closeSidebar();" data-sec="weekly"><span class="icon">📋</span> Weekly</div>
@@ -721,6 +872,93 @@ input[type="color"]{width:32px;height:32px;border-radius:6px;border:1px solid va
       </div>
       <div class="section"><div id="goalsList" class="goals-list"></div></div>
     </div>
+
+    <!-- JOURNAL -->
+<div id="section-journal" class="section-content section-hidden">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Journal</div>
+      <div class="page-sub">
+        Capture your thoughts, reflections, ideas, and growth journey.
+      </div>
+    </div>
+
+    <button
+      class="btn btn-primary"
+      onclick="openAddJournal()"
+    >
+      + New Entry
+    </button>
+  </div>
+
+  <div class="section">
+    <div
+      style="
+        display:flex;
+        justify-content:space-between;
+        gap:12px;
+        margin-bottom:20px;
+        flex-wrap:wrap;
+      "
+    >
+      <input
+        class="form-input"
+        id="journalSearch"
+        placeholder="Search journal entries..."
+        oninput="renderJournal()"
+        style="max-width:350px;"
+      >
+
+      <select
+        class="form-select"
+        id="journalMoodFilter"
+        onchange="renderJournal()"
+        style="max-width:220px;"
+      >
+        <option value="all">All Moods</option>
+        <option value="😊">😊 Happy</option>
+        <option value="😌">😌 Calm</option>
+        <option value="🤩">🤩 Excited</option>
+        <option value="💪">💪 Motivated</option>
+        <option value="🤔">🤔 Reflective</option>
+        <option value="😔">😔 Sad</option>
+        <option value="😴">😴 Tired</option>
+        <option value="😤">😤 Frustrated</option>
+      </select>
+    </div>
+
+    <div id="journalEntries">
+      <div class="goal-card">
+
+  <div class="goal-header">
+
+    <div>
+      <div class="goal-title">
+        😊 Today's Reflection
+      </div>
+
+      <div class="goal-desc">
+        June 19, 2026
+      </div>
+    </div>
+
+  </div>
+
+  <p
+    style="
+      color:var(--text2);
+      line-height:1.8;
+      margin-top:12px;
+      white-space:pre-wrap;
+    "
+  >
+    Journal content goes here...
+  </p>
+
+</div>
+    </div>
+  </div>
+</div>
 
     <!-- ANALYTICS -->
     <div id="section-analytics" class="section-content section-hidden">
@@ -823,12 +1061,37 @@ const USER_ID = getOrCreateUserId();
 // Storage
 let tasks=JSON.parse(localStorage.getItem('bloom_tasks')||'[]');
 let goals=JSON.parse(localStorage.getItem('bloom_goals')||'[]');
+let journalEntries =JSON.parse(localStorage.getItem('bloom_journal')||'[]');
 let completions=JSON.parse(localStorage.getItem('bloom_completions')||'{}');
 // completions: { 'YYYY-MM-DD': { taskId: bool } }
+ function saveJournal() {
+  const entry = {
+    id: Date.now(),
+    title: document.getElementById("journalTitle").value,
+    mood: document.getElementById("journalMood").value,
+    date: document.getElementById("journalDate").value,
+    prompt: document.getElementById("journalPrompt").value,
+    content: document.getElementById("journalContent").value,
+  };
 
+  journalEntries.unshift(entry);
+
+  localStorage.setItem(
+    "bloomJournal",
+    JSON.stringify(journalEntries)
+  );
+
+  renderJournal();
+
+  closeModal("journalModal");
+}
 function save(){
   localStorage.setItem('bloom_tasks',JSON.stringify(tasks));
   localStorage.setItem('bloom_goals',JSON.stringify(goals));
+  localStorage.setItem(
+  "bloomJournal",
+  JSON.stringify(journalEntries)
+);
   localStorage.setItem('bloom_completions',JSON.stringify(completions));
 }
 
